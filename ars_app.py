@@ -3,8 +3,7 @@
 
 # In[ ]:
 
-
-from surprise import dump
+from joblib import load
 import pickle
 import pandas as pd
 import flask
@@ -28,15 +27,15 @@ ids_biases_array = pickle.load(open("local_ids_biases_array.pkl", "rb"))
 # In[ ]:
 
 
-create_gcs_local_file.create_gcs_local_file(bucket_name, "saved-objects/pkl-objects/prediction_algo", "local_prediction_algo")
-prediction_algo = dump.load("local_prediction_algo")[1]
+create_gcs_local_file.create_gcs_local_file(bucket_name, "saved-objects/pkl-objects/joblib_prediction_algo", "local_joblib_prediction_algo")
+prediction_algo = load("local_joblib_prediction_algo")
 
 
 # In[ ]:
 
 
-create_gcs_local_file.create_gcs_local_file(bucket_name, "saved-objects/pkl-objects/similarity_matrix.pkl", "local_similarity_matrix.pkl")
-similarity_matrix = pickle.load(open("local_similarity_matrix.pkl", "rb"))
+create_gcs_local_file.create_gcs_local_file(bucket_name, "saved-objects/pkl-objects/joblib_similarity_matrix", "local_joblib_similarity_matrix")
+similarity_matrix = load("local_joblib_similarity_matrix")
 
 
 # In[ ]:
