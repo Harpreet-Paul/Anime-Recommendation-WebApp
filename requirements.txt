@@ -1,7 +1,6 @@
 requests
 pandas
 numpy
-heapq
 flask
 pickle
 scikit-surprise
