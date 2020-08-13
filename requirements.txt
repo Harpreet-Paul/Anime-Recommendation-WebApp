@@ -2,7 +2,6 @@ requests
 pandas
 numpy
 flask
-pickle
 scikit-surprise
 google-cloud-storage
 gunicorn
