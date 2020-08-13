@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import requests
@@ -10,7 +10,7 @@ import numpy as np
 from heapq import nlargest
 
 
-# In[2]:
+# In[ ]:
 
 
 def get_user_ratings(user):
@@ -33,7 +33,7 @@ def get_user_ratings(user):
     return user_ratings
 
 
-# In[3]:
+# In[ ]:
 
 
 def get_user_ratings_df(user_ratings):
@@ -47,13 +47,13 @@ def get_user_ratings_df(user_ratings):
     return user_ratings_df
 
 
-# In[4]:
+# In[ ]:
 
 
-def get_user_bias(prediction_algo, user_ratings_df, ids_biases_array):
+def get_user_bias(global_mean, user_ratings_df, ids_biases_array):
     
     bu = 0
-    global_mean = prediction_algo.trainset.global_mean
+    global_mean = global_mean
     n_epochs = 20
     reg = 0.02
     lr = 0.005
@@ -74,18 +74,18 @@ def get_user_bias(prediction_algo, user_ratings_df, ids_biases_array):
     return bu
 
 
-# In[5]:
+# In[ ]:
 
 
-def get_baseline_prediction(rid, prediction_algo, bu, ids_biases_array):
+def get_baseline_prediction(rid, global_mean, bu, ids_biases_array):
     
-    global_mean = prediction_algo.trainset.global_mean 
+    global_mean = global_mean 
     baseline_prediction = global_mean + bu + ids_biases_array[ids_biases_array[:, 0] == rid][0][2]
     
     return baseline_prediction
 
 
-# In[6]:
+# In[ ]:
 
 
 def get_unseen_anime_rids(ids_biases_array, user_ratings_df):
@@ -97,34 +97,22 @@ def get_unseen_anime_rids(ids_biases_array, user_ratings_df):
     return unseen_anime_rids
 
 
-# In[7]:
+# In[ ]:
 
 
-def get_seen_anime_iids(user_ratings_df, prediction_algo):
+def get_seen_anime_iids(user_ratings_df, iid_rid_array):
     
     seen_anime_rids = user_ratings_df.anime_id.values
     
-    seen_anime_iids = []
+    mask = np.isin(iid_rid_array[:,1], seen_anime_rids)
     
-    for x in seen_anime_rids:
-        
-        try:
-            
-            seen_anime_iids.append(prediction_algo.trainset.to_inner_iid(x))
-            
-        except ValueError:
-            
-            continue
-    
-    seen_anime_iids = np.array(seen_anime_iids)
-    
-    ##seen_anime_iids = np.array([prediction_algo.trainset.to_inner_iid(x) for x in seen_anime_rids])
+    seen_anime_iids = iid_rid_array[mask][:,0]
     
     return seen_anime_iids
     
 
 
-# In[8]:
+# In[ ]:
 
 
 def filter_ids_biases_similarities_by_seen_anime_iids(ids_biases_array, similarity_matrix, seen_anime_iids):
@@ -135,40 +123,40 @@ def filter_ids_biases_similarities_by_seen_anime_iids(ids_biases_array, similari
     return ids_biases_array_seen_anime, similarity_matrix_seen_anime
 
 
-# In[9]:
+# In[ ]:
 
 
-def get_top_20_seen_similar_anime(ids_biases_array_seen_anime, similarity_matrix_seen_anime, rid, prediction_algo, user_ratings_df):
+def get_top_k_seen_similar_anime(ids_biases_array_seen_anime, similarity_matrix_seen_anime, rid, iid_rid_array, user_ratings_df, k):
     
-    iid = prediction_algo.trainset.to_inner_iid(rid)
+    iid = iid_rid_array[iid_rid_array[:,1] == rid][0,0]
     mask = similarity_matrix_seen_anime[:, iid] > 0
 
     similarity_matrix_seen_similar_anime =  similarity_matrix_seen_anime[mask]
     ids_biases_array_seen_similar_anime = ids_biases_array_seen_anime[mask]
     rid_similarity_seen_similar_anime = np.column_stack((ids_biases_array_seen_similar_anime[:, 0], similarity_matrix_seen_similar_anime[:, iid]))
    
-    top_20_seen_similar_anime = pd.DataFrame(nlargest(20, rid_similarity_seen_similar_anime, key = lambda x: x[1]), columns = ['anime_id', 'similarity'])
-    top_20_seen_similar_anime =  top_20_seen_similar_anime.merge(user_ratings_df[['anime_id', 'my_score']], on = 'anime_id')
+    top_k_seen_similar_anime = pd.DataFrame(nlargest(k, rid_similarity_seen_similar_anime, key = lambda x: x[1]), columns = ['anime_id', 'similarity'])
+    top_k_seen_similar_anime =  top_k_seen_similar_anime.merge(user_ratings_df[['anime_id', 'my_score']], on = 'anime_id')
     
-    return top_20_seen_similar_anime
+    return top_k_seen_similar_anime
 
 
-# In[10]:
+# In[ ]:
 
 
-def get_rating_prediction(top_20_seen_similar_anime, baseline_prediction, top_20_seen_similar_anime_baseline_ratings):
+def get_rating_prediction(top_k_seen_similar_anime, baseline_prediction, top_k_seen_similar_anime_baseline_ratings):
     
-    if len(top_20_seen_similar_anime) == 0:
+    if len(top_k_seen_similar_anime) == 0:
         
         predicted_rating = baseline_prediction
             
     else:
         
-        top_20_seen_similar_anime_residuals = top_20_seen_similar_anime.my_score.values - top_20_seen_similar_anime_baseline_ratings
+        top_k_seen_similar_anime_residuals = top_k_seen_similar_anime.my_score.values - top_k_seen_similar_anime_baseline_ratings
             
-        sum_of_similarity_residual_products = np.dot(top_20_seen_similar_anime_residuals, top_20_seen_similar_anime.similarity.values)
+        sum_of_similarity_residual_products = np.dot(top_k_seen_similar_anime_residuals, top_k_seen_similar_anime.similarity.values)
             
-        sum_of_similarities = np.sum(top_20_seen_similar_anime.similarity.values)
+        sum_of_similarities = np.sum(top_k_seen_similar_anime.similarity.values)
             
         predicted_rating = baseline_prediction + (sum_of_similarity_residual_products/sum_of_similarities)
         
@@ -178,16 +166,16 @@ def get_rating_prediction(top_20_seen_similar_anime, baseline_prediction, top_20
         
 
 
-# In[11]:
+# In[ ]:
 
 
-def get_unseen_anime_predicted_ratings(ids_biases_array, user_ratings_df, prediction_algo, similarity_matrix):
+def get_unseen_anime_predicted_ratings(ids_biases_array, user_ratings_df, global_mean, iid_rid_array, similarity_matrix, k):
     
     unseen_anime_rids = get_unseen_anime_rids(ids_biases_array, user_ratings_df)
     
-    bu = get_user_bias(prediction_algo, user_ratings_df, ids_biases_array)
+    bu = get_user_bias(global_mean, user_ratings_df, ids_biases_array)
     
-    seen_anime_iids = get_seen_anime_iids(user_ratings_df, prediction_algo)
+    seen_anime_iids = get_seen_anime_iids(user_ratings_df, iid_rid_array)
     
     ids_biases_array_seen_anime, similarity_matrix_seen_anime = filter_ids_biases_similarities_by_seen_anime_iids(ids_biases_array, similarity_matrix, seen_anime_iids)
     
@@ -195,20 +183,20 @@ def get_unseen_anime_predicted_ratings(ids_biases_array, user_ratings_df, predic
     
     for unseen_anime_rid in unseen_anime_rids:
         
-        baseline_prediction = get_baseline_prediction(unseen_anime_rid, prediction_algo, bu, ids_biases_array)
+        baseline_prediction = get_baseline_prediction(unseen_anime_rid, global_mean, bu, ids_biases_array)
         
-        top_20_seen_similar_anime = get_top_20_seen_similar_anime(ids_biases_array_seen_anime, similarity_matrix_seen_anime, unseen_anime_rid, prediction_algo, user_ratings_df)
+        top_k_seen_similar_anime = get_top_k_seen_similar_anime(ids_biases_array_seen_anime, similarity_matrix_seen_anime, unseen_anime_rid, iid_rid_array, user_ratings_df, k)
         
-        top_20_seen_similar_anime_baseline_ratings = top_20_seen_similar_anime.anime_id.apply(get_baseline_prediction, args = (prediction_algo, bu, ids_biases_array))
+        top_k_seen_similar_anime_baseline_ratings = top_k_seen_similar_anime.anime_id.apply(get_baseline_prediction, args = (global_mean, bu, ids_biases_array))
         
-        rating_prediction = get_rating_prediction(top_20_seen_similar_anime, baseline_prediction, top_20_seen_similar_anime_baseline_ratings)
+        rating_prediction = get_rating_prediction(top_k_seen_similar_anime, baseline_prediction, top_k_seen_similar_anime_baseline_ratings)
         
         predicted_ratings_unseen_anime.append((unseen_anime_rid, rating_prediction))
     
     return predicted_ratings_unseen_anime
 
 
-# In[12]:
+# In[ ]:
 
 
 def get_top_n_recommendations(predicted_ratings_unseen_anime, num_of_recommendations):
@@ -218,7 +206,7 @@ def get_top_n_recommendations(predicted_ratings_unseen_anime, num_of_recommendat
     return top_n_recommendations 
 
 
-# In[13]:
+# In[ ]:
 
 
 def get_recommendation_titles(top_n_recommendations, anime_list_df):
@@ -232,20 +220,22 @@ def get_recommendation_titles(top_n_recommendations, anime_list_df):
     return recommendation_titles
 
 
-# In[14]:
+# In[ ]:
 
 
-def make_recommendations(user, ids_biases_array, similarity_matrix, prediction_algo, num_of_recommendations, anime_list_df):
+def make_recommendations(user, ids_biases_array, similarity_matrix, global_mean, iid_rid_array, k, num_of_recommendations, anime_list_df):
     
     user_ratings = get_user_ratings(user)
     
     user_ratings_df = get_user_ratings_df(user_ratings)
     
-    predicted_ratings_unseen_anime = get_unseen_anime_predicted_ratings(ids_biases_array, user_ratings_df, prediction_algo, similarity_matrix)
+    predicted_ratings_unseen_anime = get_unseen_anime_predicted_ratings(ids_biases_array, user_ratings_df, global_mean, iid_rid_array, similarity_matrix, k)
     
     top_n_recommendations = get_top_n_recommendations(predicted_ratings_unseen_anime, num_of_recommendations)
     
     recommendation_titles = get_recommendation_titles(top_n_recommendations, anime_list_df)
     
     return recommendation_titles
+
+
 
