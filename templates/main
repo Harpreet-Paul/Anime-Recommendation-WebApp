@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<style>
+form {
+    margin: auto;
+    width: 35%;
+}
+.result {
+    margin: auto;
+    width: 35%;
+    border: 1px solid #ccc;
+}
+</style>
+<head>
+    <title>Anime Recommendation System</title>
+</head>
+<form action="{{ url_for('main') }}" method="POST">
+    <fieldset>
+        <legend>Input values:</legend>
+        Username:
+        <input name="username" type="text" required>
+        <br>
+        <br> Number of Recommendations:
+        <input name="number of recommendations" type="number" required>
+        <br>
+        <br>
+        <input type="submit">
+    </fieldset>
+</form>
+<br>
+<div class="result" align="center">
+    {% if result %}
+        {% for variable, value in original_input.items() %}
+            <b>{{ variable }}</b> : {{ value }}
+        {% endfor %}
+        <br>
+        <br> Recommendations:
+           {% block content %}
+           {{result | safe}}
+           {% endblock %}
+    {% endif %}
+</div>
+</html>
