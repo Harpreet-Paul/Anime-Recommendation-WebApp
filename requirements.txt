@@ -1,0 +1,9 @@
+requests
+pandas
+numpy
+heapq
+flask
+pickle
+scikit-surprise
+google-cloud-storage
+gunicorn
