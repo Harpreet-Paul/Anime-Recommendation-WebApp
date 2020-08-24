@@ -55,11 +55,29 @@ $\hat{r}_{ui} = \frac{\sum\limits_{j \in N^k_u(i)} \text{sim}(i, j) \cdot r_{uj}
 
 where ${sim}(i, j)$ is the degree of similarity between an item $i$ and another item $j$, $r_{uj}$ is the rating that user $u$ gave to the similiar item $j$ and $N^k_u(i)$ is the set of $k$ items that are most similar to show $i$ that user $u$ has rated.
 
-Item-Based KNN-with-Baseline is a modified form of the above algorithm that takes the form: 
+The basic idea is as follows:
+
+Compare all the ratings for an item $i$ with all the ratings for another item $j$ and then compute some measure of similarity between the two. Similarity between the ratings for the two items is used as a proxy for the degree of similarity between the items themsevles. This step is repeated for all pairs of items.
+
+Then, find the k most similar items to the unseen item $i$ that user $u$ has also rated. The user's ratings on these similar items become the basis for predicting the rating on $i$. The predicted rating is an average of the ratings by $u$ on the k similar items $j$, weighted by how similar each of those k items are to the item $i$. The greater the similarity between $j$ and $i$, the more the rating on $j$ contributes to the predicted rating for $i$. Intuitively, if $u$ gave a low rating to a very similar item $j$, then the predicted rating on $i$ should go down. 
+
+Item-Based KNN-with-Baseline is a modified version of the above algorithm that takes the form: 
 
 $\hat{r}_{ui} = b_{ui} + \frac{ \sum\limits_{j \in N^k_u(i)}
 \text{sim}(i, j) \cdot (r_{uj} - b_{uj})} {\sum\limits_{j \in
 N^k_u(i)} \text{sim}(i, j)}$
+
+where $b_{ui}$ is the baseline rating for a user $u$ on an item $i$ and b_{uj} is the baseline rating for the user $u$ on the similar item $j$. 
+
+In this version of the algorithm, the similarity between items is the shrunk pearson-baseline correlation coefficient which is calculated as:
+
+$\begin{align}\begin{aligned}\text{pearson_baseline_shrunk_sim}(i, j) &= \frac{|I_{ij}| - 1}
+{|I_{ij}| - 1 + \text{shrinkage}} \cdot \hat{\rho}_{ij}\\\end{aligned}\end{align}$
+
+where $|I_{ij}|$ is the number of instances where a user rated both items $i$ and $j$, "shrinkage" is a pre-determined shrinkage factor and $\hat{\rho}_{ij}$ is the pearson-baseline correlation coefficient, which is calculated as:
+
+
+
 
 
 1. where i got data from and the structure of the data
