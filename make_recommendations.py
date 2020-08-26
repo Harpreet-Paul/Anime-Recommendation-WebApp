@@ -8,6 +8,7 @@ import requests
 import pandas as pd
 import numpy as np
 from heapq import nlargest
+import time
 
 
 ## Retrieve a user's anime list which contains their anime ratings from their profile at MyAnimeList.net and store these ratings in a list. 
