@@ -94,5 +94,5 @@ def main():
     return flask.render_template('ars_app_recommendations_page', result=recommendations.to_html(escape = False, index=False, border=0),)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
 
