@@ -1,0 +1,28 @@
+<!-- HTML template to be rendered when user makes a 'get' request to the Flask app's web endpoint. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="generator" content="RocketCake">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ars_app_home_page.css') }}">
+</head>
+<body>
+<div class="textstyle1">
+  <img src="/static/ars_app_background_image.jpg" id="img_e4bf9ac" alt="" title="" />
+<h1 id="heading_594a0821"><span class="textstyle2">  <span class="textstyle3">Hakken 発見<br/></span>
+</span>
+</h1><form  action=""
+enctype="application/x-www-form-urlencoded"
+method="POST" id="form_30174d59"><div id="form_30174d59_padding" ><div class="textstyle2">  <span class="textstyle4"><br/><br/></span>
+<input type="number" value="" title="" name="number of recommendations"  placeholder="# of recommendations" min="0" max="100" step="1"  id="edit_15ec8179" >
+<input type="text" value="" title="" name="username"  placeholder="Enter your MAL username here"  id="edit_4c46cf44" >
+<input name="Button1" type="submit" value="Submit" title=""  id="button_49ec4bae" >
+</div>
+<div style="clear:both"></div></div></form><div id="text_6b4db2e2"><div class="textstyle1">  <span class="textstyle4">A machine-learning based anime recommendation system</span>
+</div>
+</div>  </div>
+</body>
+</html>

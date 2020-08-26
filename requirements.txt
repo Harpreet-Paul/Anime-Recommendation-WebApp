@@ -1,7 +1,9 @@
+# List of dependencies to be pip installed on the google cloud virtual machine. 
+
 requests
 pandas
 numpy
 flask
-joblib
 google-cloud-storage
 gunicorn
+joblib

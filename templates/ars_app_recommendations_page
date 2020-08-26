@@ -1,0 +1,25 @@
+<!-- HTML template to be rendered when the user makes a 'post' request to the Flask app's web endpoint. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="generator" content="RocketCake">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ars_app_recommendations_page.css') }}">
+</head>
+<body>
+<div class="textstyle1">
+  <img src="/static/ars_app_background_image.jpg" id="img_e4bf9ac" alt="" title="" />
+<h1 id="heading_594a0821"><span class="textstyle2">  <span class="textstyle3">Hakken 発見<br/></span>
+</span>
+</h1><div id="text_6b4db2e2"><div class="textstyle1">  <span class="textstyle4">A machine-learning based anime recommendation system</span>
+</div>
+<div class="center">
+    {{result}}
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='ars_app_recommendations_dataframe_js') }}"></script>
+</body>
+</html>
