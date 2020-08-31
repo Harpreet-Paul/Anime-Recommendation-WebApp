@@ -2,9 +2,10 @@
 
 ## How to Use
 
-**Access the app here:** [Hakken](http://Hakken.ca) 
+| **Access the app here:** [Hakken](http://Hakken.ca) |
+|---------------|
 
-| :white_check_mark:        | Use the username "**heptoop**" if you'd like to test the application without making a profile on MyAnimeList.net.       |
+| :white_check_mark:        | Use the username "**harpreet-paul**" if you'd like to test the application without making a profile on MyAnimeList.net.       |
 |---------------|:------------------------|
 
 1. Make a profile at [MyAnimeList.net](https://myanimelist.net/register.php?from=%2F).
