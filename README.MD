@@ -2,37 +2,52 @@
 
 * **Access the app here:** [Hakken](http://Hakken.ca)
 
-## Background
+# Table of contents
+1. [Background](#background)
+2. [What is Hakken?](#what_is_hakken)
+3. [Motivation](#motivation)
+4. [How it Works](#how_it_works)
+   1. [Problem/Solution Framework](#problem/solution_framework)
+   2. [The Data](#the_data)
+   3. [The Algorithm](#the_algorithm)
+      1. [Baseline Rating](#baseline_rating)
+      2. [Item-Based K-Nearest-Neighbours](#item-based_knn)
+      1. [Item-Based KNN-with-Baseline](#item-based_knn-with-baseline)
+   4. [Making Real-Time Recommendations](#making_real_time_recommendations)
+5. [Shortcomings and Future Improvements](#improvements)
+6. [Repository Contents](#repo_contents)
+
+## Background <a name="background"></a>
 
 Anime refers to hand-drawn and computer-generated animation originating from Japan. Anime is characterized by its' unique art style, expressive characters and fantastical themes. Since its' inception in 1920, anime has grown to become internationally popular and has found its' way into popular North American streaming services such as Netflix. 
 
-## What is Hakken?
+## What is Hakken? <a name="what_is_hakken"></a>
 
 Hakken is a machine learning based anime recommendation system. It takes user's ratings of anime(s) they have previously seen and uses these ratings as a basis for generating personalized recommendations.
 
-## Motivation
+## Motivation <a name="motivation"></a>
 
 If Netflix already implements a machine learning based recommendation system and hosts animes on it's platform, why build Hakken? 
 
 The selection of animes available on Netflix is very limited. Hence, avid anime fans use anime streaming services such as Crunchyroll, which provide more selection. Crunchyroll, however, does not have a personalized anime recommendation feature for their users. Thus, the motivation behind creating Hakken was to give anime fans automated and personalized recommendations from a much larger pool of animes than netflix can offer.  
 
-## How it Works
+## How it Works <a name="how_it_works"></a>
 
-### Problem/Solution Framework
+### Problem/Solution Framework <a name="problem/solution_framework"></a>
 
 The task of generating anime recommendations can be framed as follows: 
 
 A model or algorithm should predict the ratings that a user <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> would give to all the items <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/> that the user has yet to see. These predicted ratings should then be sorted from highest to lowest and the unseen anime corresponding to the top N highest predicted ratings should be served as recommendations. 
 
-### The Data
+### The Data <a name="the_data"></a>
 
 MyAnimeList.net is an anime community and database where users create profiles that feature a list of their anime ratings on a scale of 1-10. Kaggle user azathoth42 scraped together a dataset of ~45 million user ratings from public MyAnimeList profiles which was used for algorithm training and testing for Hakken.
 
-### The Algorithm
+### The Algorithm <a name="the_algorithm"></a>
 
 Hakken uses the **Item-Based KNN-with-Baseline** collaborative filtering algorithm to predict the ratings that a user <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> would give to all unseen items <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/> and generate recommendations. To explain how this algorithm works, we first introduce the baseline rating model and the item-based k-nearest-neighbours algorithm and then show how the Item-Based KNN-with-Baseline algorithm is synthesized from these two approaches. 
 
-#### Baseline Rating
+#### Baseline Rating <a name="baseline_rating"></a>
 
 The baseline rating model is a simple model for predicting user ratings on items that assumes a user rating is a function of 3 terms: the global average rating across all items, the user bias and the item bias. User bias can be thought of as how much above or below the global average a user tends to rate items on average. Item bias can be thought of as how much above or below the global average an item tends to get rated on average. More simply, the user bias is a term meant to capture whether or not a user is a tough critic or easy-to-please rater. The item bias is a term mean to capture whether an item is inherently above or below average in quality. 
 
@@ -48,7 +63,7 @@ where <img src="/tex/a5eb431ad7aa0c93eae373def59f0e6f.svg?invert_in_darkmode&san
 
 where <img src="/tex/165967386760509d1ff8fa2c775d4594.svg?invert_in_darkmode&sanitize=true" align=middle width=19.83937064999999pt height=14.15524440000002pt/> is the known rating by a user <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> on an item <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/>, <img src="/tex/7efae7cfec0e6f3cd651382600af9603.svg?invert_in_darkmode&sanitize=true" align=middle width=43.81199624999999pt height=22.465723500000017pt/> is the set of all known ratings on which the baseline rating model is trained and <img src="/tex/fd8be73b54f5436a5cd2e73ba9b6bfa9.svg?invert_in_darkmode&sanitize=true" align=middle width=9.58908224999999pt height=22.831056599999986pt/> is a regularization constant. 
 
-#### Item-Based K-Nearest-Neighbours 
+#### Item-Based K-Nearest-Neighbours <a name="item-based_knn"></a>
 
 Item-Based K-Nearest-Neighbours is a collaborative filtering algorithm where the predicted rating for a user <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> on an item <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/> is:
 
@@ -66,7 +81,7 @@ Compute the pearson correlation coefficient as a measure of similarity between t
 
 Then, find the k most similar items to the unseen item <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/> that user <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> has also rated. The user's ratings on these similar items become the basis for predicting the rating on <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/>. The predicted rating is an average of the ratings by <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> on the k similar items <img src="/tex/36b5afebdba34564d884d347484ac0c7.svg?invert_in_darkmode&sanitize=true" align=middle width=7.710416999999989pt height=21.68300969999999pt/>, weighted by how similar each of those k items are to the item <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/>. The greater the similarity between <img src="/tex/36b5afebdba34564d884d347484ac0c7.svg?invert_in_darkmode&sanitize=true" align=middle width=7.710416999999989pt height=21.68300969999999pt/> and <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/>, the more the rating on <img src="/tex/36b5afebdba34564d884d347484ac0c7.svg?invert_in_darkmode&sanitize=true" align=middle width=7.710416999999989pt height=21.68300969999999pt/> contributes to the predicted rating for <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/>. Intuitively, if <img src="/tex/6dbb78540bd76da3f1625782d42d6d16.svg?invert_in_darkmode&sanitize=true" align=middle width=9.41027339999999pt height=14.15524440000002pt/> gave a low rating to a very similar item <img src="/tex/36b5afebdba34564d884d347484ac0c7.svg?invert_in_darkmode&sanitize=true" align=middle width=7.710416999999989pt height=21.68300969999999pt/>, then the predicted rating on <img src="/tex/77a3b857d53fb44e33b53e4c8b68351a.svg?invert_in_darkmode&sanitize=true" align=middle width=5.663225699999989pt height=21.68300969999999pt/> should go down. 
 
-#### Item-Based KNN-with-Baseline
+#### Item-Based KNN-with-Baseline <a name="item-based_knn-with-baseline"></a>
 
 The KNN algorithm attempts to capture the effects of user-item interactions, i.e. user preferences for certain kinds of items over others, on user ratings. However, such effects are small compared to the influence of item and user biases. In other words, the majority of a user's rating on an item is determined by how critical of a rater that user is and how inherently above or below average in quality an item is, independent of a user's preference or aversion for that kind of item. It is only the extent to which a user's raw rating differs from the predicted baseline rating -- which encapsulates the effects of user and item bias -- that captures the user’s preference or aversion to a particular kind of item.
 
@@ -104,7 +119,7 @@ Combining everything, the predicted rating takes the following form:
 
 <img src="/tex/63bb9849783d01d91403bc9a5fea12a2.svg?invert_in_darkmode&sanitize=true" align=middle width=9.075367949999992pt height=22.831056599999986pt/>, the number of nearest neighbours and "shrinkage", the pearson correlation coefficient shrinkage factor, are hyperparameters that are fine-tuned through a 3-fold RandomizedSearchCV procedure.
 
-### Making Real-Time Recommendations
+### Making Real-Time Recommendations <a name="making_real_time_recommendations"></a>
 
 When using Hakken, users are asked to submit their MyAnimeList Username. Hakken uses the Jikan Unofficial MyAnimeList API to make an API call for the user's anime list from MyAnimeList.net.
 
@@ -113,7 +128,7 @@ The retrieved anime list is processed and fed into the Item-Based KNN-with-Basel
 The Item-Based KNN-with-Baseline algorithm is able to generate recommendations within  ~2 minutes. It generates recommendations at this speed because the item-item similarities, which have the longest computation time, are pre-computed and stored in numpy arrays which are loaded into memory when the program is first started. The user bias computation and nearest neighbours aggregation, which make up most of the 2 minute computation time, are performed on the spot because they cannot be pre-computed.
 
 
-## Shortcomings and Future Improvements 
+## Shortcomings and Future Improvements <a name="improvements"></a>
 
 There are 3 main categories in which Hakken could be improved: recommendations, UI and efficiency.
 
@@ -131,7 +146,7 @@ There are 3 main categories in which Hakken could be improved: recommendations, 
     * Faster Execution Time
         * Hakken can serve recommendations in approximately 2 minutes. This time could be reduced, however, if Hakken was written in C++ instead of Python. 
 
-## Contents
+## Repository Contents <a name="repo_contents"></a>
 * Flask app in `ars_app.py`
 * App functions in `make_recommendations.py`
 * `create_gcs_local_file.py` is a script that loads model objects from google cloud storage
