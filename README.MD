@@ -4,6 +4,9 @@
 
 **Access the app here:** [Hakken](http://Hakken.ca) 
 
+| :white_check_mark:        | Use the username "**heptoop**" if you'd like to test the application without making a profile on MyAnimeList.net.       |
+|---------------|:------------------------|
+
 1. Make a profile at [MyAnimeList.net](https://myanimelist.net/register.php?from=%2F).
 2. In the top right hand corner of the website, open up the dropdown underneath your username and select "Profile". 
 3. Click the "Anime List" button on the left hand side of the page.
@@ -11,8 +14,6 @@
 3. Go to [Hakken](http://Hakken.ca).
 4. Enter your MAL (myanimelist) username and the desired number of recommendations. 
 5. Hit submit to get your recommendations.
-
-Use the username "**heptoop**" if you'd like to test the application without making a profile on MyAnimeList.net. 
 
 ## Table of contents
 1. [Background](#background)
