@@ -62,7 +62,7 @@ $$
 where $r_{uj}$ is the rating the user $u$ gave to the similiar item $j$, $N^k_u(i)$ is the set of $k$ items that are most similar to show $i$ the user $u$ has rated and ${sim}(i, j)$ is the degree of similarity between an item $i$ and another item $j$ and is computed using the pearson correlation coefficient:
 
 $$
-\text{pearson_sim}(i, j) = \frac{ \sum\limits_{u \in U_{ij}}
+\text{pearson similarity}(i, j) = \frac{ \sum\limits_{u \in U_{ij}}
 (r_{ui} -  \mu_i) \cdot (r_{uj} - \mu_{j})} {\sqrt{\sum\limits_{u
 \in U_{ij}} (r_{ui} -  \mu_i)^2} \cdot \sqrt{\sum\limits_{u \in
 U_{ij}} (r_{uj} -  \mu_{j})^2} }
@@ -99,14 +99,14 @@ The difference is that item similarity is determined by the shrunken pearson cor
 The shrunk pearson-baseline correlation coefficient is calculated as:
 
 $$
-\begin{align}\begin{aligned}\text{pearson_baseline_shrunk_sim}(i, j) &= \frac{|U_{ij}| - 1}
+\begin{align}\begin{aligned}\text{pearson baseline shrunk similarity}(i, j) &= \frac{|U_{ij}| - 1}
 {|U_{ij}| - 1 + \text{shrinkage}} \cdot \hat{\rho}_{ij}\\\end{aligned}\end{align}
 $$
 
 where $|U_{ij}|$ is the number of instances where a user rated both items $i$ and $j$, "shrinkage" is a pre-determined shrinkage factor and $\hat{\rho}_{ij}$ is the pearson-baseline correlation coefficient, which is calculated as:
 
 $$
-\text{pearson_baseline_sim}(i, j) = \hat{\rho}_{ij} = \frac{\sum\limits_{u \in U_{ij}} (r_{ui} -  b_{ui}) \cdot (r_{uj} - b_{uj})} {\sqrt{\sum\limits_{u \in U_{ij}} (r_{ui} -  b_{ui})^2}\cdot \sqrt{\sum\limits_{u \in U_{ij}} (r_{uj} -  b_{uj})^2}}
+\text{pearson baseline similarity}(i, j) = \hat{\rho}_{ij} = \frac{\sum\limits_{u \in U_{ij}} (r_{ui} -  b_{ui}) \cdot (r_{uj} - b_{uj})} {\sqrt{\sum\limits_{u \in U_{ij}} (r_{ui} -  b_{ui})^2}\cdot \sqrt{\sum\limits_{u \in U_{ij}} (r_{uj} -  b_{uj})^2}}
 $$
 
 The extent of the shrinkage becomes greater when $|U_{ij}|$ is smaller, which is desirable because we are less confident in the computed similarity between items $i$ and $j$ mapping onto reality when only a few users have rated both items. 
