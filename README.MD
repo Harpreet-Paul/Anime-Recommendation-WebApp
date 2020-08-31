@@ -138,5 +138,4 @@ There are 3 main categories in which Hakken could be improved: recommendations, 
 * HTML templates in `templates`
 * CSS, Javascript and Image files in `static`
 * Dependencies in `requirements.txt`
-* Project info in `project_info.ipynb`
 
