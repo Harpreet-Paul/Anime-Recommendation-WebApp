@@ -8,6 +8,9 @@
 | :white_check_mark:        | Use the username "**harpreet-paul**" if you'd like to test the application without making a profile on MyAnimeList.net.       |
 |---------------|:------------------------|
 
+| :notebook:        | View my anime ratings [here](https://myanimelist.net/animelist/harpreet-paul)  |
+|---------------|:------------------------|
+
 1. Make a profile at [MyAnimeList.net](https://myanimelist.net/register.php?from=%2F).
 2. In the top right hand corner of the website, open up the dropdown underneath your username and select "Profile". 
 3. Click the "Anime List" button on the left hand side of the page.
