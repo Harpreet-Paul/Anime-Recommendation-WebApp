@@ -2,7 +2,7 @@
 
 ## How to Use
 
-| :tv:        | **Access the app here:** [Hakken](http://Hakken.ca)   |
+| :tv:        | **Access the app here:** [Hakken](http://35.203.66.50:5000/)   |
 |---------------|:------------------------|
 
 | :white_check_mark:        | Use the username "**harpreet-paul**" if you'd like to test the application without making a profile on MyAnimeList.net      |
